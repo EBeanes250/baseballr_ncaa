@@ -1,1 +1,86 @@
 # EB_Analying_Data_In_R
+
+
+
+[CPP_R.xlsx](https://github.com/EBeanes250/EB_Analying_Data_In_R/files/8221064/CPP_R.xlsx)
+
+
+
+
+
+library(tidyverse)
+library(pacman)
+library(Lahman)
+library(baseballDBR)
+library(readxl)
+library(broom)
+
+
+CPP_BBrecords <- read_excel("~/Downloads/CPP_BBrecords.xlsx")
+View(CPP_BBrecords)
+
+head(CPP_BBrecords,9)
+
+#Linear Model of CPP from 2011 - 2019
+
+CPP_BBrecords <- CPP_BBrecords %>%
+          filter(yearID < 2020,) %>%
+          select(teamID, yearID, lgID, G, W, L, R, RA)
+CPP_BBrecords %>%
+          tail(10)
+
+CPP_BBrecords <- CPP_BBrecords %>%
+          mutate(RD = R - RA, Wpct = W / (W+L))
+CPP_run_diff <- ggplot(CPP_BBrecords, aes(x = RD, y = Wpct))+
+          geom_point()+
+          scale_x_continuous("Run Differential")+
+          scale_y_continuous("Winning Percentage")
+linfit <- lm(Wpct ~ RD, data = CPP_BBrecords)
+linfit
+CPP_run_diff +
+          geom_smooth(method = "lm", se = FALSE)
+
+
+#Finding the Residuals, seeing how accurate the linear model is
+
+CPP_BBrecords <- augment(linfit, data = CPP_BBrecords)
+base_plot <- ggplot(CPP_BBrecords, aes(x = RD, y = .resid))+
+          geom_point(alpha = 0.3)+
+          geom_hline(yintercept = 0, linetype = 3)+
+          xlab("Run Differential") + ylab("Residual")
+highlight_CPPrecord <- CPP_BBrecords %>%
+          arrange(desc(abs(.resid))) %>%
+          head(10)
+resid_CPPsummary <- CPP_BBrecords %>%
+          summarize(N = n(), avg = mean(.resid),
+                    RMSE = sqrt(mean(.resid ^ 2)))
+resid_CPPsummary
+
+rmse <- resid_CPPsummary %>%
+          pull(RMSE)
+
+CPP_BBrecords %>%
+          summarize(N = n(),
+                    within_one = sum(abs(.resid) < rmse),
+                    within_two = sum(abs(.resid) < 2 * rmse)) %>%
+          mutate(within_one_pct = within_one / N,
+                within_two_pct = within_two / N)
+
+
+#Pytagorean Formula for Winning Percentage 
+
+CPP_BBrecords <- CPP_BBrecords %>%
+          mutate(Wpct_pyt = R ^ 2 / (R ^ 2 + RA ^ 2))
+
+CPP_BBrecords <- CPP_BBrecords %>%
+          mutate(residuals_pyt = Wpct - Wpct_pyt)
+CPP_BBrecords %>%
+          summarize(rmse = sqrt(mean(residuals_pyt^2)))
+
+#Exponent in Pyt Model
+
+CPP_BBrecords <- CPP_BBrecords %>%
+          mutate(logWratio = log(W / L),
+                 logRratio = log(R/RA))
+pytfit <- lm(logWratio ~ 0 + logRratio, data = CPP_BBrecords)
+pytfit
