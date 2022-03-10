@@ -4,10 +4,6 @@
 
 [CPP_R.xlsx](https://github.com/EBeanes250/EB_Analying_Data_In_R/files/8221064/CPP_R.xlsx)
 
-
-
-
-
 library(tidyverse)
 library(pacman)
 library(Lahman)
