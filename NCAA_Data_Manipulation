@@ -1,4 +1,4 @@
-# EB_Analying_Data_In_R
+# EB_Analying_NCAA_Baseball_Data_R
 
 library(tidyverse)
 library(pacman)
