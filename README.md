@@ -1,4 +1,4 @@
-# EB_Analying_Data_In_R
+# EB_Analyzing_Data_In_R
 
 Teaching myself R :)
 
