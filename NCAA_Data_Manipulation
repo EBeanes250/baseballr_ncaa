@@ -1,7 +1,5 @@
 # EB_Analying_Data_In_R
 
-
-
 library(tidyverse)
 library(pacman)
 library(Lahman)
