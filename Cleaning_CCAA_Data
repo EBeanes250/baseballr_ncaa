@@ -43,7 +43,7 @@ CPP_2022_Batting = ncaa_scrape(teamid = 91,year = 2022, type = "batting") %>%
   mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
   select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
 
-#Chico Sate  Data------------
+#Chico St  Data------------
 # 2022 Chico State Hitting
 
 school_id_lu("Chico")
