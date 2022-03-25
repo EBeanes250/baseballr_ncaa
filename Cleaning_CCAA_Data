@@ -1,0 +1,236 @@
+library(baseballr)
+library(tidyverse)
+
+
+# Conferences reference
+data(ncaa_team_lu)
+
+
+#Pulling D2 CCAA conference 2022 totals as a reference
+
+conference_hitting %>%
+  filter(Lg == "California Collegiate", Year == 2022)
+
+conference_pitching %>%
+  filter(Lg == "California Collegiate", Year == 2022)
+
+
+
+
+
+CCAA_Ref_ <- ncaa_team_lu %>%
+  filter(division == 2, conference == "CCAA") %>%
+  select(year,school, school_id, conference_id)
+
+
+# CPP 2022-----------
+
+# 2022 Pitching Data
+
+CPP_2022_Pitching <- ncaa_scrape(teamid = 91,year = 2022,type = "Pitching" ) %>%
+   mutate(IP = as.numeric(IP)) %>%
+  dplyr::filter(IP > 0) %>% 
+  slice(-15,-16) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,) 
+ 
+
+#  CPP 2022 Hitters Data
+CPP_2022_Batting = ncaa_scrape(teamid = 91,year = 2022, type = "batting") %>%
+  dplyr:: slice(-32,-33) %>%
+  dplyr:: filter(AB > 0) %>% 
+  slice(-17) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+#Chico Sate  Data------------
+# 2022 Chico State Hitting
+
+school_id_lu("Chico")
+
+ncaa_baseball_roster(teamid = 95, team_year  = 2022)
+
+ncaa_scrape(95, 2022, type = "batting")
+
+Chico_St_2022_Hititng <- ncaa_scrape(95, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-22,-21) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+
+# 2022 Chico State Pitching Stats
+
+ncaa_baseball_roster(teamid = 95, team_year = 2022)
+
+Chico_St_2022_Pitching <- ncaa_scrape(95,2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-14,-15) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,) 
+
+#Cal State San Marcos  Data----------
+# 2022 pitching
+
+school_id_lu("San Marcos")
+
+San_Marcos_2022_Pitching <- ncaa_scrape(30198, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-18,-19) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,)
+
+# Cal State San Marcos Hitting 2022
+ncaa_scrape(30198, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-19,-20)
+
+
+# Cal State Dominguez Hills -----------
+
+#  Hitting 2022
+
+school_id_lu("Cal St. Dom. Hills")
+
+Dom_Hills_2022_Hitting <- ncaa_scrape(92, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-17,-18) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+# Cal State Dom. Hills Pitching 2022
+
+Dom.Hills_2022_Pitching <- ncaa_scrape(92, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-16,-17) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,)
+
+# Cal State LA ---------
+school_id_lu("Cal State LA")
+
+# 2022 Cal State LA hitting 
+
+Cal_StateLA_2022_Hitting <- ncaa_scrape(100, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-18,-19) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+
+# 2022 Cal State LA pitching
+
+Cal_StateLA_2022_Pitching <- ncaa_scrape(100, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-15,-16) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,)
+  
+# Cal State East Bay ------------ 
+school_id_lu("East Bay")
+
+# Cal State East Bay Pitching
+
+East_Bay_2022_Pitching <- ncaa_scrape(98, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-15,-16) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,)
+
+# Cal State East Bay Hitting
+East_Bay_2022_Hitting <- ncaa_scrape(98, 2022, type ="batting") %>%
+  filter(AB >0) %>%
+  slice(-21,-22) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+summary(East_Bay_2022_Hitting)
+  
+
+# Cal State San Bernardino  -------------
+ncaa_school_id_lu("Cal St. San B'dino")
+
+# San Bernardino Hitting 
+
+ncaa_scrape(93, 2022, type ="batting") %>%
+  filter(AB > 0) %>%
+  slice(-16,-17) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+  
+
+# San Bernardino Pitching
+ncaa_scrape(93, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-18,-19) %>%
+   mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,)
+  
+# San Fran State-----------
+
+# 2022 San Fran State Hitting
+
+ncaa_school_id_lu("San.Fran.")
+
+SF_State_2022_Hitting <- ncaa_scrape(628, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-23,-24) %>%
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+# 2022 San Fran State Pitching 
+
+San.Fran.State_2022_Pitching <-  ncaa_scrape(628, 2022, type = "Pitching") %>%
+   filter(IP > 0) %>%
+   slice(-15,-16) %>%
+   mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,)
+  
+# Cal State Monterey Bay ------
+# 2022 Hitting 
+MontereyBay_2022_Hitting <- ncaa_scrape(30055, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-23,-24) %>%
+   mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+  
+# 2022 Pitching 
+ncaa_scrape(30055, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-18,-19) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,) 
+
+# Sonoma St ----------
+
+# 2022 Hitting 
+ncaa_scrape(645, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-22,-23) %>% 
+  mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+
+# 2022 Pitching 
+ncaa_scrape(645, 2022, type = "Pitching") %>%
+  filter(IP > 0) %>%
+  slice(-18,-19) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,) 
+
+
+# Stanislaus St.----------
+
+#Hitting 
+ncaa_scrape(103, 2022, type = "batting") %>%
+  filter(AB > 0) %>%
+  slice(-15,-16) %>%
+   mutate(OPS = OBPct + SlgPct,PA = AB + BB + HBP + SF + SH, OPS_Plus = (OPS / .800) * 100, BABIP = (H - HR)  / (AB - K - HR + SF )) %>%
+  select(player_id,year, school, conference,division, Player, Yr, Pos, GS, GP, PA, AB, R, H, `2B`, `3B`, HR, RBI, SB, CS,BB, K, BA, OBPct, SlgPct, OPS, OPS_Plus, BABIP, TB, SF, DP, TB,)
+  
+# Pitching 
+
+ncaa_scrape(103, 2022, type = "pitching") %>%
+  filter(IP > 0) %>%
+  slice(-15,-16) %>%
+  mutate(Win_Pct = W / (W +L), WHIP = (BB + H)/ IP,cFIP = (13 * `HR-A`+ 3 * BB - 2 * SO) / IP + 5.79, cERA_Plus = 100 * (5.79 / ERA), H9 = 9 * H / IP, HR9 = 9 * `HR-A` / IP, BB9 = 9 * BB / IP, SO9 = 9 * SO / IP, `SO/W` = SO / W) %>%
+  select(player_id, year, school, conference, division, Player, Yr, Pos, W, L, Win_Pct, ERA, GS, App, GP, GS, SV, IP, H, R, ER, `HR-A`, `2B-A`, `3B-A`, BB, IBB, SO, HB, Bk, WP, BF, cERA_Plus, cFIP, WHIP, H9, HR9, `SO9`, BB9,) 
